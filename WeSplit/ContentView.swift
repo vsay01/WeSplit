@@ -23,11 +23,23 @@ struct ContentView: View {
     
     let tipPercentages = [TipPercentages.TEN, TipPercentages.FIFTHEEN, TipPercentages.TWENTY, TipPercentages.TWENTY_FIVE, TipPercentages.ZERO]
     
+    var totalPerPerson: Double {
+        // totalAmountPayPerPerson = (Amount of order + tip percentage) / number of people
+        let peopleCount = Double(numberOfPeople + 2) // numberOfPeople start from 0 ; convert to Double because it need to be used with checkAmount
+        let tipSelection = Double(tipPercentage)
+        
+        let tipValue = checkAmount / 100 * tipSelection
+        let grandTotal = checkAmount + tipValue
+        let amountPerPerson = grandTotal / peopleCount
+
+        return amountPerPerson
+    }
+    
     var body: some View {
         NavigationView { // used to create a navigation-based app in which the user can traverse a collection of views
             Form {
                 Section {
-                    TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.identifier)).keyboardType(.decimalPad)
+                    TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.currencyCode ?? "USD")).keyboardType(.decimalPad)
                     //It shows 4 people because $numberOfPeople is 2 which is index 2 of the selection
                     Picker("Number of people", selection: $numberOfPeople) {
                         ForEach(2 ..< 100) {
@@ -38,7 +50,7 @@ struct ContentView: View {
                 
                 Section {
                     Picker("Tip percentage", selection: $tipPercentage) {
-                        ForEach(tipPercentages, id: \.self) {
+                        ForEach(tipPercentages, id: \.self.rawValue) { //we need to use self.rawValue to get selection working because it's enum
                             Text($0.rawValue, format:.percent)
                         }
                     }
@@ -48,8 +60,10 @@ struct ContentView: View {
                 }
                 
                 Section {
-                    Text(checkAmount, format: .currency(code: Locale.current.identifier))
+                    Text(totalPerPerson, format: .currency(code: Locale.current.currencyCode ?? "USD"))
                 }
+                
+                
             }.navigationTitle("WeSplit") //This is placed after Form and NOT navigationView - It allow iOS to change title freely
         }
     }
