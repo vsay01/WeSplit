@@ -1,6 +1,6 @@
 # WeSplit
-- Calculate how to split the check/number of people + how much tip
-- Enter cost of food + tip + how many people = how much each need to pay
+- Calculate how to split the check among number of people (It also include tips)
+- Enter cost of food; Select tip; Select how many people
 
 # What to learn
 - Basic UI design
