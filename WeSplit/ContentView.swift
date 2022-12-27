@@ -21,6 +21,8 @@ struct ContentView: View {
         case ZERO = 0
     }
     
+    let tipPercentages = [TipPercentages.TEN, TipPercentages.FIFTHEEN, TipPercentages.TWENTY, TipPercentages.TWENTY_FIVE, TipPercentages.ZERO]
+    
     var body: some View {
         NavigationView { // used to create a navigation-based app in which the user can traverse a collection of views
             Form {
@@ -32,6 +34,21 @@ struct ContentView: View {
                             Text("\($0) people")
                         }
                     }
+                }
+                
+                Section {
+                    Picker("Tip percentage", selection: $tipPercentage) {
+                        ForEach(tipPercentages, id: \.self) {
+                            Text($0.rawValue, format:.percent)
+                        }
+                    }
+                    .pickerStyle(.segmented) // segmented control. This is a specialized kind of picker that shows a handful of options in a horizontal list, and it works great when you have only a small selection to choose from.
+                } header: {
+                    Text("How much tip do you want to leave?")
+                }
+                
+                Section {
+                    Text(checkAmount, format: .currency(code: Locale.current.identifier))
                 }
             }.navigationTitle("WeSplit") //This is placed after Form and NOT navigationView - It allow iOS to change title freely
         }
